@@ -8,7 +8,7 @@ class Wallet(AbstractUser):
     balance = models.FloatField(default=0)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['password']
 
     def __str__(self):
         return self.email
