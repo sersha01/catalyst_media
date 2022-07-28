@@ -6,6 +6,7 @@ from .models import Wallet, Transaction
 
 class TransactionSerializer(serializers.ModelSerializer):
     wallet = serializers.CharField(source='wallet.email')
+    date = serializers.DateTimeField(format='%d/%m/%Y - %H:%M')
     class Meta:
         model = Transaction
         fields = '__all__'

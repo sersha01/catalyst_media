@@ -19,7 +19,7 @@ class UserWallet(APIView):
         email = request.data.get('email')
         password = request.data.get('password')
         if Wallet.objects.filter(email=email).exists():
-            return Response({'success': False, 'message': 'User already exists'})
+            return Response({'success': False, 'message': 'Email already exists'})
         else:
             Wallet.objects.create(email=email,password=make_password(password))
             return Response({'success': True, 'message': 'User created'})
@@ -28,7 +28,7 @@ class UserWallet(APIView):
     def get(self, request):
         try:
             wallet = Wallet.objects.get(email=request.user.email)
-            transactions = Transaction.objects.filter(wallet=wallet)
+            transactions = Transaction.objects.filter(wallet=wallet).order_by('-date')
             return Response({"transactions":TransactionSerializer(transactions, many=True).data, "balance":wallet.balance})
         except:
             return Response({'users':[]})
@@ -44,5 +44,5 @@ class UserWallet(APIView):
         wallet.save()
 
         Transaction.objects.create(wallet=wallet, amount=amount)
-        transactions = Transaction.objects.filter(wallet=wallet)
+        transactions = Transaction.objects.filter(wallet=wallet).order_by('-date')
         return Response({"transactions":TransactionSerializer(transactions, many=True).data, "balance":wallet.balance})
